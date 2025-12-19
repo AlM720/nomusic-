@@ -44,9 +44,15 @@ def download_from_url(url):
     ydl_opts = {
         'outtmpl': output_path,
         'quiet': True,
+        'format': 'bestaudio[ext=m4a]',  # تنزيل صوت جاهز دون حاجة لدمج فيديو
+        'ffmpeg_location': '/usr/bin/ffmpeg',  # مسار ffmpeg في Streamlit Cloud
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([url])
+        try:
+            ydl.download([url])
+        except Exception as e:
+            st.error(f"خطأ في التنزيل: {str(e)}. جرب رابطًا آخر أو تحقق من الإنترنت.")
+            return None, None
     downloaded_file = [f for f in os.listdir(temp_dir) if os.path.isfile(os.path.join(temp_dir, f))][0]
     return os.path.join(temp_dir, downloaded_file), temp_dir
 
@@ -60,6 +66,8 @@ def process_input(input_path, is_url, output_type, quality_mode):
     if is_url:
         st.write("جارٍ تنزيل الملف من الرابط...")
         input_path, download_dir = download_from_url(input_path)
+        if input_path is None:  # إذا فشل التنزيل
+            return None, None
 
     # كشف نوع الملف
     ext = os.path.splitext(input_path)[1].lower()
