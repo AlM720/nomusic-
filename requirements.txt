@@ -1,0 +1,7 @@
+torch>=2.0.0
+torchaudio>=2.0.0
+demucs>=4.0.0
+streamlit>=1.0.0  # بدلاً من gradio
+ffmpeg-python>=0.2.0
+torchcodec>=0.1.0
+yt-dlp>=2023.0.0  # لتنزيل من يوتيوب
